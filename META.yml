@@ -1,0 +1,19 @@
+--- #YAML:1.0
+name:                WebService-30Boxes-API
+version:             0.01
+abstract:            Perl interface to the 30boxes.com REST API
+license:             ~
+generated_by:        ExtUtils::MakeMaker version 6.31
+distribution_type:   module
+requires:     
+    HTTP::Request:                 0
+    HTTP::Response:                0
+    LWP::UserAgent:                0
+    Test::Simple:                  0.44
+    URI:                           0
+    XML::Simple:                   0
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
+    version: 1.2
+author:
+    - M. Blom (blom@cpan.org)
