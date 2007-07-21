@@ -4,10 +4,12 @@ use strict;
 use Carp qw/croak/;
 use WebService::30Boxes::API::Request;
 use WebService::30Boxes::API::Response;
+use WebService::30Boxes::API::Event;
+use WebService::30Boxes::API::Todo;
 use LWP::UserAgent;
 use XML::Simple;
 
-our $VERSION = '0.01';
+our $VERSION = '1.0';
 
 sub new {
    my ($class, %params) = @_;
@@ -36,10 +38,38 @@ sub call {
       }
       $req->{'_api_args'}->{'apiKey'} = $self->{'_apiKey'};
       $req->encode_args();
-      $self->_execute($req);
+      my $response = $self->_execute($req);
+
+      #adjust
+      if (defined $response->{'_xml'}->{'eventList'}->{'event'}->{'allDayEvent'}){
+      		_adjust($response, 'event', 'allDayEvent');
+      }
+
+      if (defined $response->{'_xml'}->{'todoList'}->{'todo'}->{'done'}){
+      		_adjust($response, 'todo', 'done');
+      }
+
+      if ($meth =~ /^events/){
+      		my $error_msg = $response->{'error_msg'};
+      		my $error_code = $response->{'error_code'};
+		return new WebService::30Boxes::API::Event($response, $response->{'success'}, $response->{'error_msg'}, $response->{'error_code'});
+      }
+      elsif ($meth =~ /^todos/){
+      		my $error_msg = $response->{'error_msg'};
+      		my $error_code = $response->{'error_code'};
+		return new WebService::30Boxes::API::Todo($response, $response->{'success'}, $response->{'error_msg'}, $response->{'error_code'});
+      }
    } else {
       return;
    }
+}
+
+sub _adjust {
+	my ($response, $method, $identifier) = @_;
+	my $eventId = $response->{'_xml'}->{$method . 'List'}->{$method}->{$identifier};
+	my %temp = %{$response->{'_xml'}->{$method . 'List'}->{$method}};
+	delete $response->{'_xml'}->{$method . 'List'}->{$method};
+	$response->{'_xml'}->{$method . 'List'}->{$method}->{$eventId} = \%temp;
 }
 
 sub request_auth_url {
@@ -83,6 +113,7 @@ sub _execute {
    return $resp; 
 }
 
+1;
 #################### main pod documentation begin ###################
 
 =head1 NAME
@@ -91,34 +122,45 @@ WebService::30Boxes::API - Perl interface to the 30boxes.com REST API
 
 =head1 SYNOPSIS
 
-  use WebService::30Boxes::API;
+use WebService::30Boxes::API;
 
-  # You always have to provide your api_key
-  my $boxes  = WebService::30Boxes::API->(api_key => 'your_api_key');
+#$api_key and $auth_token are defined before
+my $boxes = WebService::30Boxes::API->new(api_key => $api_key);
 
-  # Then you might want to lookup a user and print some info
-  my $result = $boxes->call('user.FindById', { id => 47 });
-  if($result->{'success'}) {
-     my $user   = $result->reply->{'user'};
-  
-     print $user->{'firstName'}, " ",
-           $user->{'lastName'}, " joined 30Boxes at ",
-           $user->{'createDate'},"\n";
-  } else {
-     print "An error occured ($result->{'error_code'}: ".
-           "$result->{'error_msg'})";
-  }
-  
-  # If authorization is needed, you need to get permission first:
-  my $redirect = $boxes->request_auth_url({
-     applicationName    => '30Boxes cool application',
-     applicationLogoUrl => 'http://wherever/your/logo/is-stored.png',
-     returnUrl          => 'http://wherever/you/want/the/client_to_return/'
-  }); 
-  
-  print CGI::redirect($redirect);
+my $events = $boxes->call('events.Get', {authorizedUserToken => $auth_token});
+if($events->{'success'}){
+	print "List start: " . $events->get_listStart . "\n";
+	print "List end: " . $events->get_listEnd . "\n";
+	print "User Id: " . $events->get_userId . "\n\n\n";
 
-  # After that, you may call the 'call' method as described above
+	#while ($events->nextEventId){ - if you use this, you don't need to specify
+	#$_ as an argument
+	#foreach (@{$events->get_ref_eventIds}){
+	foreach ($events->get_eventIds){
+		print "Event id: $_\n";
+		print "Title: " . $events->get_title($_) . "\n";
+		print "Repeat end date: " . $events->get_repeatEndDate($_) . "\n";
+		print "Repeat skip dates: ";
+		foreach ($events->get_repeatSkipDates($_)){print "$_\n";}
+		print "Repeat type: " . $events->get_repeatType($_) . "\n";
+		print "Repeat interval: " . $events->get_repeatInterval($_) . "\n";
+		print "Reminder: " . $events->get_reminder($_) . "\n";
+		print "Tags: ";
+		foreach ($events->get_tags($_)){print "$_\n";}
+		print "Start date: " . $events->get_startDate($_) . "\n";
+		print "Start time: " . $events->get_startTime($_) . "\n";
+		print "End date: " . $events->get_endDate($_) . "\n";
+		print "End time: " . $events->get_endTime($_) . "\n";
+		print "Is all day event: " . $events->get_isAllDayEvent($_) . "\n";
+		print "Notes: ";
+		foreach ($events->get_notes($_)){print "$_\n";}
+		print "Privacy: " . $events->get_privacy($_) . "\n\n";
+	}
+}
+else{
+	print "An error occured (" . $events->{'error_code'} . ": " .
+		$events->{'error_msg'} . ")\n";
+}
 
 =head1 DESCRIPTION
 
@@ -152,6 +194,9 @@ C<call> accepts a method name followed by a hashref with the values to
 pass on to 30Boxes. It returns a L<WebService::30Boxes::API::Response>
 object.
 
+It returns an object of type WebService::30Boxes::API::Event, which the 
+user can then use to get the desired information
+
 =head3 request_auth_url
 
 Some API methods require authentication (permission by the user). This
@@ -182,15 +227,26 @@ L<http://30boxes.com/>, L<http://30boxes.com/api/>
 
 L<WebService::30Boxes::API::Response>
 
+L<WebService::30Boxes::API::Event>
+
+L<WebService::30Boxes::API::Todo>
+
+=head1 TODO
+
+Add more error checking. Compact the code and make it more efficient. Please email me for feature requests.
+
 =head1 BUGS
 
-Please report any bugs to L<http://rt.cpan.org/Ticket/Create.html?Queue=WebService::30Boxes::API>.
+Please email chitoiup@umich.edu with any bugs.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-M. Blom, 
+M. Blom (main functionality), 
 E<lt>blom@cpan.orgE<gt>,
 L<http://menno.b10m.net/perl/>
+
+Robert Chitoiu (integration with Event and Todo)
+E<lt>chitoiup@umich.eduE<gt>
 
 =head1 COPYRIGHT
 
@@ -201,5 +257,3 @@ The full text of the license can be found in the
 LICENSE file included with this module.
 
 =cut
-
-1;
