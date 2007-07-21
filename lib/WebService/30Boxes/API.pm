@@ -9,7 +9,7 @@ require WebService::30Boxes::API::Todo;
 require LWP::UserAgent;
 require XML::Simple;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 sub new {
    my ($class, %params) = @_;
@@ -164,7 +164,7 @@ WebService::30Boxes::API - Perl interface to the 30 Boxes API
 
 =head1 DESCRIPTION
 
-C<WebService::30Boxes::API> - Perl interface to the 30boxes.com REST API
+C<WebService::30Boxes::API> - Perl interface to the 30 Boxes API
 
 =head2 METHODS
 
@@ -191,11 +191,11 @@ With this method, you can call one of the available methods as described
 on L<http://30boxes.com/api/>. 
 
 C<call> accepts a method name followed by a hashref with the values to
-pass on to 30Boxes. It returns a L<WebService::30Boxes::API::Response>
+pass on to 30Boxes.
 object.
 
-It returns an object of type WebService::30Boxes::API::Event, which the 
-user can then use to get the desired information
+It returns an object of type WebService::30Boxes::API::Event or WebService::30Boxes::API (depending
+which API method was called), which the user can then use to get the desired information.
 
 =head3 request_auth_url
 

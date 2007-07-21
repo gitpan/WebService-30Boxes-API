@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Carp qw/croak/;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 sub new {
 	my ($class, $result, $success, $error_code, $error_message) = @_;
