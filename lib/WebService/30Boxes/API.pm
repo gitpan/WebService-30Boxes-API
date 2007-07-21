@@ -9,7 +9,7 @@ require WebService::30Boxes::API::Todo;
 require LWP::UserAgent;
 require XML::Simple;
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 sub new {
    my ($class, %params) = @_;
@@ -49,14 +49,13 @@ sub call {
       		_adjust($response, 'todo', 'done');
       }
 
+      my $error_msg = $response->{'error_msg'};
+      my $error_code = $response->{'error_code'};
+
       if ($meth =~ /^events/){
-      		my $error_msg = $response->{'error_msg'};
-      		my $error_code = $response->{'error_code'};
 		return new WebService::30Boxes::API::Event($response, $response->{'success'}, $response->{'error_msg'}, $response->{'error_code'});
       }
       elsif ($meth =~ /^todos/){
-      		my $error_msg = $response->{'error_msg'};
-      		my $error_code = $response->{'error_code'};
 		return new WebService::30Boxes::API::Todo($response, $response->{'success'}, $response->{'error_msg'}, $response->{'error_code'});
       }
    } else {
@@ -128,6 +127,7 @@ WebService::30Boxes::API - Perl interface to the 30 Boxes API
   my $boxes = WebService::30Boxes::API->new(api_key => $api_key);
 
   my $events = $boxes->call('events.Get', {authorizedUserToken => $auth_token});
+  #my $todos = $boxes->call('todos.Get', {authorizedUserToken => $auth_token});
   if($events->{'success'}){
   	print "List start: " . $events->get_listStart . "\n";
   	print "List end: " . $events->get_listEnd . "\n";
@@ -194,7 +194,7 @@ C<call> accepts a method name followed by a hashref with the values to
 pass on to 30Boxes.
 object.
 
-It returns an object of type WebService::30Boxes::API::Event or WebService::30Boxes::API (depending
+It returns an object of type WebService::30Boxes::API::Event or WebService::30Boxes::API::Todo (depending
 which API method was called), which the user can then use to get the desired information.
 
 =head3 request_auth_url
