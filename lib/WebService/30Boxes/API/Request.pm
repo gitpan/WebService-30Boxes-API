@@ -4,7 +4,7 @@ use strict;
 use HTTP::Request;
 use URI;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 our @ISA = qw/HTTP::Request/;
 
 sub new {

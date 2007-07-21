@@ -9,7 +9,7 @@ require WebService::30Boxes::API::Todo;
 require LWP::UserAgent;
 require XML::Simple;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 sub new {
    my ($class, %params) = @_;
@@ -231,7 +231,7 @@ L<WebService::30Boxes::API::Event>
 
 L<WebService::30Boxes::API::Todo>
 
-L<www.umich.edu/~chitoiup/30boxes.tar.gz> - this is a Perl script that can be run in the terminal
+30boxes.pl - this is a Perl script you can find on CPAN under Web that can be run in the terminal
 and it will display the events for a given period of time along with the Todo list. It takes command
 line arguments that specify how many days/weeks worth of events and how many todos will be displayed. 
 I use it to display events and todos when I open my terminal. Send me an email with bugs or feature requests.
