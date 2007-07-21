@@ -2,14 +2,14 @@ package WebService::30Boxes::API;
 
 use strict;
 use Carp qw/croak/;
-use WebService::30Boxes::API::Request;
-use WebService::30Boxes::API::Response;
-use WebService::30Boxes::API::Event;
-use WebService::30Boxes::API::Todo;
-use LWP::UserAgent;
-use XML::Simple;
+require WebService::30Boxes::API::Request;
+require WebService::30Boxes::API::Response;
+require WebService::30Boxes::API::Event;
+require WebService::30Boxes::API::Todo;
+require LWP::UserAgent;
+require XML::Simple;
 
-our $VERSION = '1.0';
+our $VERSION = '1.01';
 
 sub new {
    my ($class, %params) = @_;
@@ -118,7 +118,7 @@ sub _execute {
 
 =head1 NAME
 
-WebService::30Boxes::API - Perl interface to the 30boxes.com REST API
+WebService::30Boxes::API - Perl interface to the 30 Boxes API
 
 =head1 SYNOPSIS
 

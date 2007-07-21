@@ -5,7 +5,7 @@ WriteMakefile(
     NAME         => 'WebService::30Boxes::API',
     VERSION_FROM => 'lib/WebService/30Boxes/API.pm', # finds \$VERSION
     AUTHOR       => 'M. Blom (blom@cpan.org)',
-    ABSTRACT     => 'Perl interface to the 30boxes.com REST API',
+    ABSTRACT     => 'Perl interface to the 30 Boxes API',
     PREREQ_PM    => {
                      'HTTP::Request' => 0,
                      'HTTP::Response' => 0,

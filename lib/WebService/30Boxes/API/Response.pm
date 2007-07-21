@@ -5,7 +5,7 @@ use warnings;
 use HTTP::Response;
 
 our @ISA = qw(HTTP::Response);
-our $VERSION = '1.0';
+our $VERSION = '1.01';
 
 sub new {
    my ($class, $args) = @_;
