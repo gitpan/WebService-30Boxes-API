@@ -5,7 +5,7 @@ use warnings;
 use HTTP::Response;
 
 our @ISA = qw(HTTP::Response);
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 sub new {
    my ($class, $args) = @_;
@@ -67,7 +67,7 @@ WebService::30Boxes::API::Response - Response from 30Boxes REST API
 
 =head1 DESCRIPTION
 
-C<WebService::30Boxes::API::Response>- Response from 30Boxes REST API
+C<WebService::30Boxes::API::Response>- Response from 30Boxes API
 
 The response object is basically a L<HTTP::Request> class, with a few
 things added. These keys can be queried:

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Carp qw/croak/;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 sub new {
 	my ($class, $result, $success, $error_code, $error_message) = @_;
@@ -206,44 +206,44 @@ WebService::30Boxes::API::Event - Object returned by WebService::30Boxes::API::c
 
 =head1 SYNOPSIS
 
-#$api_key and $auth_token are defined before
-my $boxes = WebService::30Boxes::API->new(api_key => $api_key);
+  #$api_key and $auth_token are defined before
+  my $boxes = WebService::30Boxes::API->new(api_key => $api_key);
 
-my $events = $boxes->call('events.Get', {authorizedUserToken => $auth_token});
-if($events->{'success'}){
-	print "List start: " . $events->get_listStart . "\n";
-	print "List end: " . $events->get_listEnd . "\n";
-	print "User Id: " . $events->get_userId . "\n\n\n";
-
-	#while ($events->nextEventId){ - if you use this, you don't need to specify
-	#$_ as an argument
-	#foreach (@{$events->get_ref_eventIds}){
-	foreach ($events->get_eventIds){
-		print "Event id: $_\n";
-		print "Title: " . $events->get_title($_) . "\n";
-		print "Repeat end date: " . $events->get_repeatEndDate($_) . "\n";
-		print "Repeat skip dates: ";
-		foreach ($events->get_repeatSkipDates($_)){print "$_\n";}
-		print "Repeat type: " . $events->get_repeatType($_) . "\n";
-		print "Repeat interval: " . $events->get_repeatInterval($_) . "\n";
-		print "Reminder: " . $events->get_reminder($_) . "\n";
-		print "Tags: ";
-		foreach ($events->get_tags($_)){print "$_\n";}
-		print "Start date: " . $events->get_startDate($_) . "\n";
-		print "Start time: " . $events->get_startTime($_) . "\n";
-		print "End date: " . $events->get_endDate($_) . "\n";
-		print "End time: " . $events->get_endTime($_) . "\n";
-		print "Is all day event: " . $events->isAllDayEvent($_) . "\n";
-		print "Notes: ";
-		foreach ($events->get_notes($_)){print "$_\n";}
-		print "Privacy: " . $events->get_privacy($_) . "\n\n";
-		print "External UID: " . $events->get_externalUID($_) . "\n\n";
-	}
-}
-else{
-	print "An error occured (" . $events->{'error_code'} . ": " .
-		$events->{'error_msg'} . ")\n";
-}
+  my $events = $boxes->call('events.Get', {authorizedUserToken => $auth_token});
+  if($events->{'success'}){
+  	print "List start: " . $events->get_listStart . "\n";
+  	print "List end: " . $events->get_listEnd . "\n";
+  	print "User Id: " . $events->get_userId . "\n\n\n";
+  
+  	#while ($events->nextEventId){ - if you use this, you don't need to specify
+  	#$_ as an argument
+  	#foreach (@{$events->get_ref_eventIds}){
+  	foreach ($events->get_eventIds){
+  		print "Event id: $_\n";
+  		print "Title: " . $events->get_title($_) . "\n";
+  		print "Repeat end date: " . $events->get_repeatEndDate($_) . "\n";
+  		print "Repeat skip dates: ";
+  		foreach ($events->get_repeatSkipDates($_)){print "$_\n";}
+  		print "Repeat type: " . $events->get_repeatType($_) . "\n";
+  		print "Repeat interval: " . $events->get_repeatInterval($_) . "\n";
+  		print "Reminder: " . $events->get_reminder($_) . "\n";
+  		print "Tags: ";
+  		foreach ($events->get_tags($_)){print "$_\n";}
+  		print "Start date: " . $events->get_startDate($_) . "\n";
+  		print "Start time: " . $events->get_startTime($_) . "\n";
+  		print "End date: " . $events->get_endDate($_) . "\n";
+  		print "End time: " . $events->get_endTime($_) . "\n";
+  		print "Is all day event: " . $events->isAllDayEvent($_) . "\n";
+  		print "Notes: ";
+  		foreach ($events->get_notes($_)){print "$_\n";}
+  		print "Privacy: " . $events->get_privacy($_) . "\n\n";
+  		print "External UID: " . $events->get_externalUID($_) . "\n\n";
+  	}
+  }
+  else{
+  	print "An error occured (" . $events->{'error_code'} . ": " .
+  		$events->{'error_msg'} . ")\n";
+  }
 
 =head1 DESCRIPTION
 

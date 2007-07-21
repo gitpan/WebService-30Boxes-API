@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Carp qw/croak/;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 sub new {
 	my ($class, $result, $success, $error_code, $error_message) = @_;
@@ -92,28 +92,28 @@ WebService::30Boxes::API::Todo - Object returned by WebService::30Boxes::API::ca
 
 =head1 SYNOPSIS
 
-#$api_key and $auth_token are defined before
-my $boxes = WebService::30Boxes::API->new(api_key => $api_key);
-
-my $todos = $boxes->call('todos.Get', {authorizedUserToken => $auth_token});
-if($todos->{'success'}){
-	#while ($todos->nextTodoId){ - if you use this, you don't need to specify
-	#$_ as an argument
-	#foreach (@{$todos->get_ref_todoIds}){
-	foreach ($todos->get_todoIds){
-		print "Todo id: $_\n";
-		print "Title: " . $todos->get_title($_) . "\n";
-		print "Tags: ";
-		foreach ($todos->get_tags($_)){print "$_\n";}
-		print "Done: " . $todos->isDone($_) . "\n";
-		print "Position: " . $todos->get_position($_) . "\n";
-		print "External UID: " . $todos->get_externalUID($_) . "\n";
-	}
-}
-else{
-	print "An error occured (" . $todos->{'error_code'} . ": " .
-		$todos->{'error_msg'} . ")\n";
-}
+  #$api_key and $auth_token are defined before
+  my $boxes = WebService::30Boxes::API->new(api_key => $api_key);
+  
+  my $todos = $boxes->call('todos.Get', {authorizedUserToken => $auth_token});
+  if($todos->{'success'}){
+  	#while ($todos->nextTodoId){ - if you use this, you don't need to specify
+  	#$_ as an argument
+  	#foreach (@{$todos->get_ref_todoIds}){
+  	foreach ($todos->get_todoIds){
+  		print "Todo id: $_\n";
+  		print "Title: " . $todos->get_title($_) . "\n";
+  		print "Tags: ";
+  		foreach ($todos->get_tags($_)){print "$_\n";}
+  		print "Done: " . $todos->isDone($_) . "\n";
+  		print "Position: " . $todos->get_position($_) . "\n";
+  		print "External UID: " . $todos->get_externalUID($_) . "\n";
+  	}
+  }
+  else{
+  	print "An error occured (" . $todos->{'error_code'} . ": " .
+  		$todos->{'error_msg'} . ")\n";
+  }
 
 =head1 DESCRIPTION
 
@@ -163,6 +163,10 @@ You can then use this to call any of the following functions.
 =head3 nextTodoId
 
 Advances the todo index and returns the new todoID (for convenience)
+
+Arguments:
+
+=over 5
 
 =item todoId
 
